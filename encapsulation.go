@@ -3,7 +3,8 @@ package go_ethernet_ip
 import (
 	"bytes"
 	"errors"
-	"github.com/loki-os/go-ethernet-ip/typedef"
+
+	"github.com/teldio-operations/go-ethernet-ip/typedef"
 )
 
 type EIPCommand typedef.Uint

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/loki-os/go-ethernet-ip/typedef"
+	"github.com/teldio-operations/go-ethernet-ip/typedef"
 )
 
 type ListIdentityItem struct {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/loki-os/go-ethernet-ip/typedef"
+	"github.com/teldio-operations/go-ethernet-ip/typedef"
 )
 
 func NewSendUnitData(session typedef.Udint, context typedef.Ulint, cpf *CommonPacketFormat, timeout typedef.Uint) *EncapsulationPacket {

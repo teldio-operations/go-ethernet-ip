@@ -1,9 +1,10 @@
 package go_ethernet_ip
 
 import (
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"math/rand"
 	"time"
+
+	"github.com/teldio-operations/go-ethernet-ip/typedef"
 )
 
 func CtxGenerator() typedef.Ulint {

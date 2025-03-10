@@ -2,10 +2,11 @@ package go_ethernet_ip
 
 import (
 	"encoding/json"
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"log"
 	"net"
 	"time"
+
+	"github.com/teldio-operations/go-ethernet-ip/typedef"
 )
 
 type Device struct {
