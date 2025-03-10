@@ -5,17 +5,20 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"net"
+	"sync"
 	"time"
+
+	"github.com/loki-os/go-ethernet-ip/typedef"
 )
 
 type EIPTCP struct {
-	config   *Config
-	tcpAddr  *net.TCPAddr
-	tcpConn  *net.TCPConn
-	sender   chan []byte
-	receiver map[typedef.Ulint]chan *EncapsulationPacket
+	config        *Config
+	tcpAddr       *net.TCPAddr
+	tcpConn       *net.TCPConn
+	sender        chan []byte
+	receiverMutex sync.Mutex
+	receiver      map[typedef.Ulint]chan *EncapsulationPacket
 
 	ioCancel context.CancelFunc
 	buffer   []byte
@@ -94,6 +97,7 @@ func (e *EIPTCP) read(ctx context.Context) {
 
 			e.buffer = e.buffer[read:]
 
+			e.receiverMutex.Lock()
 			for _, encapsulationPacket := range encapsulationPackets {
 				channel, ok := e.receiver[encapsulationPacket.SenderContext]
 				if ok {
@@ -102,6 +106,7 @@ func (e *EIPTCP) read(ctx context.Context) {
 					delete(e.receiver, encapsulationPacket.SenderContext)
 				}
 			}
+			e.receiverMutex.Unlock()
 		}
 	}
 }

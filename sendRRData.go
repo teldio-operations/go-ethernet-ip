@@ -3,8 +3,9 @@ package go_ethernet_ip
 import (
 	"bytes"
 	"errors"
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"time"
+
+	"github.com/loki-os/go-ethernet-ip/typedef"
 )
 
 type SendDataSpecificData struct {
@@ -49,7 +50,9 @@ func NewSendRRData(session typedef.Udint, context typedef.Ulint, cpf *CommonPack
 
 func (e *EIPTCP) SendRRData(cpf *CommonPacketFormat, timeout typedef.Uint) (*SendDataSpecificData, error) {
 	ctx := CtxGenerator()
+	e.receiverMutex.Lock()
 	e.receiver[ctx] = make(chan *EncapsulationPacket)
+	e.receiverMutex.Unlock()
 
 	encapsulationPacket := NewSendRRData(e.session, ctx, cpf, timeout)
 	b, _ := encapsulationPacket.Encode()

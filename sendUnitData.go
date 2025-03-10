@@ -2,8 +2,9 @@ package go_ethernet_ip
 
 import (
 	"errors"
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"time"
+
+	"github.com/loki-os/go-ethernet-ip/typedef"
 )
 
 func NewSendUnitData(session typedef.Udint, context typedef.Ulint, cpf *CommonPacketFormat, timeout typedef.Uint) *EncapsulationPacket {
@@ -25,7 +26,9 @@ func NewSendUnitData(session typedef.Udint, context typedef.Ulint, cpf *CommonPa
 
 func (e *EIPTCP) SendUnitData(cpf *CommonPacketFormat, timeout typedef.Uint) (*SendDataSpecificData, error) {
 	ctx := CtxGenerator()
+	e.receiverMutex.Lock()
 	e.receiver[ctx] = make(chan *EncapsulationPacket)
+	e.receiverMutex.Unlock()
 
 	encapsulationPacket := NewSendUnitData(e.session, ctx, cpf, timeout)
 	b, _ := encapsulationPacket.Encode()

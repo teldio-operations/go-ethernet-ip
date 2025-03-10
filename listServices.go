@@ -3,8 +3,9 @@ package go_ethernet_ip
 import (
 	"bytes"
 	"errors"
-	"github.com/loki-os/go-ethernet-ip/typedef"
 	"time"
+
+	"github.com/loki-os/go-ethernet-ip/typedef"
 )
 
 type ListServicesItem struct {
@@ -45,7 +46,9 @@ func NewListServices(context typedef.Ulint) *EncapsulationPacket {
 
 func (e *EIPTCP) ListServices() (*ListServices, error) {
 	ctx := CtxGenerator()
+	e.receiverMutex.Lock()
 	e.receiver[ctx] = make(chan *EncapsulationPacket)
+	e.receiverMutex.Unlock()
 
 	encapsulationPacket := NewListServices(ctx)
 	b, _ := encapsulationPacket.Encode()
