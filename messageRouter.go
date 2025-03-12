@@ -43,6 +43,34 @@ type MessageRouterResponse struct {
 	ResponseData           []byte
 }
 
+type FragmentedReadResponse struct {
+	ReplyService           typedef.Usint
+	Reserved               typedef.Usint
+	GeneralStatus          typedef.Usint
+	SizeOfAdditionalStatus typedef.Usint
+	AdditionalStatus       []byte
+	TagTypeValue           uint16
+	ResponseData           []byte
+}
+
+func (m *FragmentedReadResponse) Decode(data []byte, isString bool) {
+	dataReader := bytes.NewReader(data)
+	ReadByte(dataReader, &m.ReplyService)
+	ReadByte(dataReader, &m.Reserved)
+	ReadByte(dataReader, &m.GeneralStatus)
+	ReadByte(dataReader, &m.SizeOfAdditionalStatus)
+	m.AdditionalStatus = make([]byte, m.SizeOfAdditionalStatus*2)
+	ReadByte(dataReader, &m.AdditionalStatus)
+	ReadByte(dataReader, &m.TagTypeValue)
+	// Strings have an extra 2 bytes for some reason
+	if isString {
+		var _t uint16
+		ReadByte(dataReader, &_t)
+	}
+	m.ResponseData = make([]byte, dataReader.Len())
+	ReadByte(dataReader, &m.ResponseData)
+}
+
 func (m *MessageRouterResponse) Decode(data []byte) {
 	dataReader := bytes.NewReader(data)
 	ReadByte(dataReader, &m.ReplyService)
